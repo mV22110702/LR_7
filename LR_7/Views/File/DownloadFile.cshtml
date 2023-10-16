@@ -20,20 +20,24 @@
     }
 
     .formContainer {
+        width:300px;
         border: 1px solid black;
         padding: 10px;
     }
-    .submitBtnContainer{
-        height:48px;
-        display:flex;
-        justify-content:center;
-        align-items:end;
+
+    .submitBtnContainer {
+        height: 48px;
+        display: flex;
+        justify-content: center;
+        align-items: end;
     }
+
     .submitBtn {
-        height:min-content;
+        height: min-content;
     }
-    .form{
-        margin-bottom:0;
+
+    .form {
+        margin-bottom: 0;
     }
 </style>
 
@@ -41,20 +45,97 @@
     <div class="formContainer">
         <form method="post" class="form" enctype="multipart/form-data">
             <div class="inputGroup">
-                <label for="nameInput">Input Your name:</label>
-                <input id="nameInput" type="text" name="User.Name" />
+                <label asp-for="nameInput">Input Your name:</label>
+                <input required minlength="2" id="nameInput" type="text" name="User.Name" onChange="handleNameChange()" />
+                <span id="nameErrorMessage" hidden></span>
             </div>
             <div class="inputGroup">
                 <label for="surnameInput">Input Your surname:</label>
-                <input id="surnameInput" type="text" name="User.Surname" />
+                <input required minlength="2" id="surnameInput" type="text" name="User.Surname" onChange="handleSurnameChange()" />
+                <span id="surnameErrorMessage" hidden></span>
             </div>
             <div class="inputGroup">
                 <label for="fileNameInput">Input name of the file to download:</label>
-                <input id="fileNameInput" type="text" name="File.Name" />
+                <input required id="fileNameInput" type="text" name="File.Name" onChange="handleFileNameChange()" />
+                <span id="fileNameErrorMessage" hidden></span>
             </div>
             <div class="submitBtnContainer">
-                <input type="submit" value="Download" class="submitBtn" />
+                <input type="submit" value="Download" class="submitBtn" id="submitBtn" />
             </div>
         </form>
     </div>
 </div>
+<script>
+    const submitBtn = document.getElementById('submitBtn');
+    const nameInput = document.getElementById('nameInput')
+    const surnameInput = document.getElementById('surnameInput')
+    const fileNameInput = document.getElementById('fileNameInput')
+
+    const nameErrorSpan = document.getElementById('nameErrorMessage')
+    const surnameErrorSpan = document.getElementById('surnameErrorMessage')
+    const fileNameErrorSpan = document.getElementById('fileNameErrorMessage')
+
+    const updateSubmitBtn = () => {
+        const isDisabled = nameErrorSpan.innerHTML || surnameErrorSpan.innerHTML || fileNameErrorSpan.innerHTML
+        submitBtn.disabled = isDisabled
+    }
+
+    const setError = (span, message) => {
+        span.innerHTML = message
+        span.hidden = false
+        updateSubmitBtn()
+    }
+
+    const clearError = (span) => {
+        span.innerHTML = ""
+        span.hidden = true
+        updateSubmitBtn()
+    }
+
+    const handleNameChange = () => {
+        const value = nameInput.value;
+        if (!value) {
+            setError(nameErrorSpan, "Name is required");
+            return
+        }
+        if (value.length < 2) {
+            setError(nameErrorSpan, "Name length cannot be less than 2 characters")
+            return
+        }
+        if (/\d/.test(value)) {
+            setError(nameErrorSpan, "Name cannot contain digits")
+            return
+        }
+        clearError(nameErrorSpan);
+    }
+    const handleSurnameChange = () => {
+        const value = surnameInput.value;
+        if (!value) {
+            setError(surnameErrorSpan, "Surname is required")
+            return
+        }
+        if (value.length < 2) {
+            setError(surnameErrorSpan, "Surname length cannot be less than 2 characters")
+            return
+        }
+        if (/\d/.test(value)) {
+            setError(surnameErrorSpan, "Surname cannot contain digits")
+            return
+        }
+        clearError(surnameErrorSpan)
+    }
+
+    const handleFileNameChange = () => {
+        const value = fileNameInput.value;
+        if (!value) {
+            setError(fileNameErrorSpan, "File name is required")
+            return
+        }
+        if (!/^\w(?:[\w .-]*\w)?$/.test(value)) {
+            setError(fileNameErrorSpan, "File name can only contain alphabet characters, digits, '.','-', spaces, and must end with alphabet or digit symbols")
+            return
+        }
+        clearError(fileNameErrorSpan)
+    }
+
+</script>

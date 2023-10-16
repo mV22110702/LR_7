@@ -4,35 +4,33 @@ using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Text;
 using System.IO;
+using LR_7.Services.File;
 
 namespace LR_7.Controllers
 {
     [ApiController]
-    [Route("File")]
+    [Route("[controller]")]
     public class FileController : Controller
     {
-        private readonly ILogger<FileController> _logger;
+        private FileService FileService { get; set; }
 
-        public FileController(ILogger<FileController> logger)
+        public FileController(FileService FileService)
         {
-            _logger = logger;
+            this.FileService = FileService;
         }
 
-        [HttpGet("DownloadFile")]
+        [HttpGet("[action]")]
         public IActionResult DownloadFile()
         {
+
             return View();
         }
 
-        [HttpPost("DownloadFile")]
+        [HttpPost("[action]")]
         public FileResult DownloadFile([FromForm] DownloadFileFormModel formModel)
         {
-            StringBuilder stringBuilder= new StringBuilder();
-            stringBuilder.AppendLine(formModel.User.Name);
-            stringBuilder.AppendLine(formModel.User.Surname);
-            byte[] fileContents = Encoding.UTF8.GetBytes(stringBuilder.ToString());
-            string textFileName = formModel.File.Name.Contains(".txt") ? formModel.File.Name : $"{formModel.File.Name}.txt";
-            return File(fileContents, "text/plain", textFileName);
+            FileForDownload file = FileService.DownloadFile(formModel);
+            return File(file.Contents.ToArray(), "text/plain", file.Name);
         }
     }
 }
