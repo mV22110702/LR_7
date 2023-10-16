@@ -1,0 +1,60 @@
+﻿<style>
+    .inputGroup {
+        display: flex;
+        flex-direction: column;
+        margin-top: 20px;
+    }
+
+    .body {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    body {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+    }
+
+    .formContainer {
+        border: 1px solid black;
+        padding: 10px;
+    }
+    .submitBtnContainer{
+        height:48px;
+        display:flex;
+        justify-content:center;
+        align-items:end;
+    }
+    .submitBtn {
+        height:min-content;
+    }
+    .form{
+        margin-bottom:0;
+    }
+</style>
+
+<div class="body">
+    <div class="formContainer">
+        <form method="post" class="form" enctype="multipart/form-data">
+            <div class="inputGroup">
+                <label for="nameInput">Input Your name:</label>
+                <input id="nameInput" type="text" name="User.Name" />
+            </div>
+            <div class="inputGroup">
+                <label for="surnameInput">Input Your surname:</label>
+                <input id="surnameInput" type="text" name="User.Surname" />
+            </div>
+            <div class="inputGroup">
+                <label for="fileNameInput">Input name of the file to download:</label>
+                <input id="fileNameInput" type="text" name="File.Name" />
+            </div>
+            <div class="submitBtnContainer">
+                <input type="submit" value="Download" class="submitBtn" />
+            </div>
+        </form>
+    </div>
+</div>
